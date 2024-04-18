@@ -2,112 +2,126 @@ const User = require("../models/user.model")
 const { APP_SECRET } = require("../config")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const Admin = require("../models/admin.model")
 
+module.exports.register = async (req, res) => {
+    try {
+        let { fullname, email, password } = req.body;
 
-// module.exports.register=(req,res)=>{
-//     let {fullname,phone,email,password,appsecret} =req.body
-//     if(appsecret==APP_SECRET){
-//         Admin.findOne({email},(err,user)=>{
-//             if(err){
-//                 return res.status(500).json({
-//                     messsage:"an error occured",
-//                     error:err,
-//                     status:false
-//                 })
-//             }
-//             if(user){
-//                 return res.status(400).json({
-//                     message:"Email number already exist",
-//                     status:false
-//                 })
-//             }
-//             if(!user){
-//                 let hashPassword = bcrypt.hashSync(password,10)
-    
-//                 let newUser = new Admin({
-//                     fullname,email,password:hashPassword,phone,role:"admin"
-//                 })
-//                 newUser.save((err,user)=>{
-//                     if(err) return res.status(400).json({
-//                         message:"An error occured",
-//                         status:false
-//                     })
-//                     if(user){
-//                         return res.status(201).json({
-//                             message:"account created successfully",
-//                             status:true,
-//                             role:"admin"
-//                         })
-//                     }
-//                 })
-//             }
-//         })
-//     }else{
-//         return res.status(400).json({
-//             message:"you dont have this access"
-//         })
-//     }
-// }
-
-// module.exports.login=(req,res)=>{
-//     let {email,password}=req.body
-//     Admin.findOne({email},(err,user)=>{
-//         if(err){
-//             return res.status(400).json({
-//                 message:"an error occured",
-//                 status:false
-//             })
-//         }
-//         if (!user) {
-//             return res.status(400).json({
-//                 message:"incorrect email",
-//                 status:false
-//             })
-//         }
-//         if(user){
-//             let isPasswordValid = bcrypt.compareSync(password, user.password)
-            
-//             if (isPasswordValid==true) {
-//                 const token = jwt.sign({id:user._id},APP_SECRET)
-//                 return res.status(200).json({
-//                     token,
-//                     message:"Login successfully",
-//                     status:true,
-//                     role:user.role
-//                 })
-//             }else{
-//                 return res.status(404).json({
-//                     message:"Password is not correct",
-//                     status:true
-//                 })
-//             }
-//         }
-//     })
-// }
-
-module.exports.profile=(req,res)=>{
-    User.findOne({_id:req.user.id},(err,user)=>{
-        if(err){
+        // Check if user with the provided email already exists
+        const existingUser = await Admin.findOne({ email });
+        if (existingUser) {
             return res.status(400).json({
-                message:"an error occured"
-            })
+                message: "Email already exists",
+                status: false
+            });
         }
-        if(!user){
+
+        // Hash the password
+        const hashPassword = bcrypt.hashSync(password, 10);
+
+        // Create a new user instance
+        const newUser = new Admin({
+            fullname,
+            email,
+            password: hashPassword,
+            role: "admin"
+        });
+
+        // Save the new user to the database
+        const savedUser = await newUser.save();
+
+        // If user is saved successfully, send success response
+        if (savedUser) {
+            return res.status(201).json({
+                message: "Account created successfully",
+                status: true,
+                role: "admin"
+            });
+        }
+    } catch (error) {
+        // If any error occurs during the process, send error response
+        return res.status(500).json({
+            message: "An error occurred",
+            error: error.message,
+            status: false
+        });
+    }
+};
+module.exports.login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Find the user with the provided email
+        const user = await Admin.findOne({ email });
+        
+        // If user is not found, return incorrect email message
+        if (!user) {
+            return res.status(400).json({
+                message: "Incorrect email",
+                status: false
+            });
+        }
+
+        // Check if the provided password matches the stored password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        // If password is not correct, return password incorrect message
+        if (!isPasswordValid) {
+            return res.status(400).json({
+                message: "Password is not correct",
+                status: false
+            });
+        }
+
+        // If email and password are correct, generate JWT token
+        const token = jwt.sign({ id: user._id }, APP_SECRET);
+
+        // Send success response with token and user role
+        return res.status(200).json({
+            token,
+            message: "Login successful",
+            status: true,
+            role: user.role
+        });
+    } catch (error) {
+        // If any error occurs during the process, send error response
+        return res.status(500).json({
+            message: "An error occurred",
+            error: error.message,
+            status: false
+        });
+    }
+};
+
+module.exports.profile = async (req, res) => {
+    try {
+        console.log(req.user)
+        // Find the amdin based on the authenticated user ID (assuming it's available in req.user)
+        const admin = await Admin.findOne({ _id: req.user.id });
+        console.log(admin)
+        // If admin is not found, return 404 Not Found
+        if (!admin) {
             return res.status(404).json({
-                message:"Admin does not exist"
-            })
+                success: false,
+                message: "Admin not found"
+            });
         }
-        if(user){
-            return res.status(200).json({
-                user:{
-                    fullname:user.fullname,
-                    phone:user.phone,
-                    email:user.email
-                }
-            })
-        }
-    })
-}
+
+        // If user is found, return 200 OK with admin details
+        return res.status(200).json({
+            success: true,
+            admin
+        });
+    } catch (error) {
+        // If any error occurs during the process, return 500 Internal Server Error
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred",
+            error: error.message
+        });
+    }
+};
 
 module.exports.getAllRealtors=(req,res)=>{
     User.find({role:"user"})

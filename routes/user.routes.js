@@ -6,6 +6,7 @@ const routes = express.Router()
 routes.post("/register",register)
 
 routes.post("/login",login)
+
 // routes.post("/refer/:referralId", recordReferralClick)
 // routes.get("/upline/:refphone",getUplineDetails)
 // routes.post("/forgot/password",forgotPassword)
