@@ -123,6 +123,7 @@ module.exports.profile = async (req, res) => {
     }
 };
 
+
 module.exports.getAllRealtors=(req,res)=>{
     User.find({role:"user"})
     .populate("upline")
