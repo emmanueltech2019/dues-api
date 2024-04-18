@@ -124,20 +124,6 @@ module.exports.profile = async (req, res) => {
 };
 
 
-module.exports.getAllRealtors=(req,res)=>{
-    User.find({role:"user"})
-    .populate("upline")
-    .then((result) => {
-        
-        return res.status(200).json({
-            realtors:result
-        })
-    }).catch((err) => {
-        return res.status(400).json({
-            message:"an error occured"
-        })
-    });
-}
 
 module.exports.updatePersonalDetails=(req,res)=>{
     let {fullname,email, phone}  = req.body

@@ -95,7 +95,34 @@ module.exports.login = async (req, res) => {
   }
 };
 
+module.exports.profile = async (req, res) => {
+  try {
+      console.log(req.user)
+      // Find the amdin based on the authenticated user ID (assuming it's available in req.user)
+      const user = await User.findOne({ _id: req.user.id });
+      // console.log(admin)
+      // If admin is not found, return 404 Not Found
+      if (!user) {
+          return res.status(404).json({
+              success: false,
+              message: "User not found"
+          });
+      }
 
+      // If user is found, return 200 OK with admin details
+      return res.status(200).json({
+          success: true,
+          user
+      });
+  } catch (error) {
+      // If any error occurs during the process, return 500 Internal Server Error
+      return res.status(500).json({
+          success: false,
+          message: "An error occurred",
+          error: error.message
+      });
+  }
+};
 // module.exports.getUplineDetails = (req, res) => {
 //   let { refphone } = req.params;
 //   User.findOne({ refID: refphone }, (err, upline) => {
