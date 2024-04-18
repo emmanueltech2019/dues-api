@@ -3,7 +3,7 @@ const Company = require('../models/company.model');
 // Controller to create a new company
 exports.createCompany = async (req, res) => {
     try {
-        const { name, industry, address, city, country, employees, revenue, founded, website } = req.body;
+        const { name, industry, address, city, country, website } = req.body;
         
         // Create a new company instance
         const newCompany = new Company({
@@ -12,9 +12,6 @@ exports.createCompany = async (req, res) => {
             address,
             city,
             country,
-            employees,
-            revenue,
-            founded,
             website
         });
 

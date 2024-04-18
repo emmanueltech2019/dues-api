@@ -7,6 +7,7 @@ const {PORT,DB}=require("./config")
 
 const userRoutes =  require("./routes/user.routes")
 const adminRoutes =  require("./routes/admin.routes")
+const superAdminRoutes =  require("./routes/super-admin.routes")
 const companyRoutes =  require("./routes/companies.routes")
 
 const app = express()
@@ -18,6 +19,7 @@ app.use(express.urlencoded({extended:true}))
 // Routes
 app.use("/api/v1/user",userRoutes)
 app.use("/api/v1/admin",adminRoutes)
+app.use("/api/v1/superadmin",superAdminRoutes)
 app.use("/api/v1/admin",companyRoutes)
 
 /**
