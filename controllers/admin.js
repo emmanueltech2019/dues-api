@@ -179,3 +179,33 @@ module.exports.changePassword=(req,res)=>{
         }
     })
 }
+
+exports.getStaffByCompany = async (req, res) => {
+    try {
+        const { companyId } = req.params;
+
+        // Find all staff members by company ID
+        const staffMembers = await Staff.find({ company:companyId });
+
+        // If no staff members are found, return 404 Not Found
+        if (staffMembers.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No staff members found for the company"
+            });
+        }
+
+        // Return success response with the list of staff members
+        res.status(200).json({
+            success: true,
+            staffMembers
+        });
+    } catch (error) {
+        // Return error response if there's an error during retrieval
+        res.status(500).json({
+            success: false,
+            message: "Failed to retrieve staff members",
+            error: error.message
+        });
+    }
+};

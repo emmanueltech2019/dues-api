@@ -30,7 +30,7 @@ module.exports.register = async (req, res) => {
         fullname,
         email,
         password: hashPassword,
-        refID: UniqueId,
+        employeeID: UniqueId,
       });
 
       await newUser.save();

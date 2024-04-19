@@ -11,7 +11,7 @@ const userSchema = new Schema({
         required:true,
         unique:true
     },
-    refID:{
+    employeeID:{
         type:String,
         required:true,
         unique:true
