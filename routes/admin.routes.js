@@ -1,5 +1,5 @@
 const express = require("express")
-const {register,login,profile,getAllRealtors, changePassword, updatePersonalDetails} = require("../controllers/admin")
+const {register,login,profile,getAllRealtors, changePassword, updatePersonalDetails, getStaffByCompany} = require("../controllers/admin")
 const { requireSignin, adminMiddleware } = require("../middlewares")
 const routes = express.Router()
 const { getAllHolidayRecords, createHolidayRecord, getHolidayRecordById, updateHolidayRecordById, deleteHolidayRecordById } = require("../controllers/holiday")
@@ -25,7 +25,8 @@ routes.put('/holiday-records/:id', requireSignin, updateHolidayRecordById);
 // Route to delete a holiday record by ID
 routes.delete('/holiday-records/:id', requireSignin, deleteHolidayRecordById);
 
-routes.get('/holiday-records-company/:companyId', requireSignin, deleteHolidayRecordById);
+routes.get('/staff/:companyId', requireSignin, getStaffByCompany);
+
 
 routes.post("/register",register)
 routes.post("/login",login)
