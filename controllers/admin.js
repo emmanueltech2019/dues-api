@@ -188,7 +188,7 @@ exports.getStaffByCompany = async (req, res) => {
         const { companyId } = req.params;
 
         // Find all staff members by company ID
-        const staffMembers = await Staff.find({ company:companyId });
+        const staffMembers = await User.find({ company:companyId });
 
         // If no staff members are found, return 404 Not Found
         if (staffMembers.length === 0) {

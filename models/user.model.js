@@ -16,6 +16,10 @@ const userSchema = new Schema({
         required:true,
         unique:true
     },
+    company:{
+        type:String,
+        required:true
+    },
     gender:{
         type:String,
         default:""

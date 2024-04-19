@@ -10,7 +10,7 @@ const smtpTransport =require("nodemailer-smtp-transport")
 
 module.exports.register = async (req, res) => {
   try {
-    let { fullname, email, password } = req.body;
+    let { fullname, email, password, company } = req.body;
     const UniqueId = generateUniqueId({
       length: 10,
       useLetters: true,
@@ -31,6 +31,7 @@ module.exports.register = async (req, res) => {
         email,
         password: hashPassword,
         employeeID: UniqueId,
+        company
       });
 
       await newUser.save();
