@@ -6,7 +6,7 @@ const Admin = require("../models/admin.model")
 
 module.exports.register = async (req, res) => {
     try {
-        let { fullname, email, password } = req.body;
+        let { fullname, email, password, company } = req.body;
 
         // Check if user with the provided email already exists
         const existingUser = await Admin.findOne({ email });
@@ -25,7 +25,8 @@ module.exports.register = async (req, res) => {
             fullname,
             email,
             password: hashPassword,
-            role: "admin"
+            role: "admin",
+            company
         });
 
         // Save the new user to the database
@@ -36,7 +37,8 @@ module.exports.register = async (req, res) => {
             return res.status(201).json({
                 message: "Account created successfully",
                 status: true,
-                role: "admin"
+                role: "admin",
+                company
             });
         }
     } catch (error) {
@@ -82,7 +84,8 @@ module.exports.login = async (req, res) => {
             token,
             message: "Login successful",
             status: true,
-            role: user.role
+            role: user.role,
+            company: user.company
         });
     } catch (error) {
         // If any error occurs during the process, send error response

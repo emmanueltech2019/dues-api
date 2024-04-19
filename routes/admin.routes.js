@@ -25,6 +25,8 @@ routes.put('/holiday-records/:id', requireSignin, updateHolidayRecordById);
 // Route to delete a holiday record by ID
 routes.delete('/holiday-records/:id', requireSignin, deleteHolidayRecordById);
 
+routes.get('/holiday-records-company/:companyId', requireSignin, deleteHolidayRecordById);
+
 routes.post("/register",register)
 routes.post("/login",login)
 
