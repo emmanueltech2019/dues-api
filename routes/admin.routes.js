@@ -14,7 +14,7 @@ routes.get("/profile",requireSignin,profile)
 routes.post('/holiday-records', requireSignin, createHolidayRecord);
 
 // Route to get all holiday records
-routes.post('/holiday-records', requireSignin, getAllHolidayRecords);
+routes.post('/holiday-record', requireSignin, getAllHolidayRecords);
 
 // Route to get a single holiday record by ID
 routes.get('/holiday-records/:id', requireSignin, getHolidayRecordById);
