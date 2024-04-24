@@ -7,6 +7,7 @@ const { getAllHolidayRecords, createHolidayRecord, getHolidayRecordById, updateH
 
 routes.patch("/change/details",requireSignin,updatePersonalDetails)
 routes.post("/change/password",requireSignin,changePassword)
+
 routes.get("/profile",requireSignin,profile)
 
 // routes.get("/holiday",requireSignin,profile)
